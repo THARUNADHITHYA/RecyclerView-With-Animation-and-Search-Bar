@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
@@ -50,6 +51,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void filteredList(ArrayList<ReviewItem> filteredList) {
+
+        mData = filteredList;
+        notifyDataSetChanged();
+
     }
 
     public class ReviewHolder extends RecyclerView.ViewHolder

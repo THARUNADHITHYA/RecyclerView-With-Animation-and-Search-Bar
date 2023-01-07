@@ -5,11 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,13 +28,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
 
-
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
 
         recyclerView = findViewById(R.id.review_rv);
@@ -57,8 +62,53 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(reviewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu,menu);
+        MenuItem searchItem = menu.findItem(R.id.actionSearch);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                filter(s);
+                return false;
+            }
+        });
+
+        return  true;
+
+    }
+
+    public void filter(String text)
+    {
+        ArrayList<ReviewItem> filteredList = new ArrayList<ReviewItem>();
+
+        for(ReviewItem item: mData){
+            if(item.getTitle().toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(item);
+            }
+        }
+
+        if(filteredList.isEmpty()){
+            Toast.makeText(this,"No match Found",Toast.LENGTH_SHORT).show();
+        }
+        else
+            reviewAdapter.filteredList(filteredList);
+
+    }
 
 
 }
